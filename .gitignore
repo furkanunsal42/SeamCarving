@@ -1,0 +1,17 @@
+
+*.vsidx
+*.lock
+*.db
+*.db-shm
+*.db-wal
+*.opendb
+*.ipch
+*.tlog
+*.obj
+*.ilk
+*.recipe
+*.log
+*.iobj
+*.ipdb
+Seam Carving/x64/Release/Seam Carving.vcxproj.FileListAbsolute.txt
+*.pdb
