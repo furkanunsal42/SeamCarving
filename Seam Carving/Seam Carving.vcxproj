@@ -143,6 +143,7 @@
     <ClCompile Include="Dependencies\stb_image\stb_image.cpp" />
     <ClCompile Include="Dependencies\stb_image\stb_image_resize.cpp" />
     <ClCompile Include="Dependencies\stb_image\stb_image_write.cpp" />
+    <ClCompile Include="Graphs.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
@@ -160,6 +161,7 @@
     <ClInclude Include="Dependencies\stb_image\stb_image.h" />
     <ClInclude Include="Dependencies\stb_image\stb_image_resize.h" />
     <ClInclude Include="Dependencies\stb_image\stb_image_write.h" />
+    <ClInclude Include="Graphs.h" />
     <ClInclude Include="Image.h" />
   </ItemGroup>
   <ItemGroup>

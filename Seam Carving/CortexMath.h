@@ -18,16 +18,23 @@ public:
 	Vec2(const T& x, const T& y) :
 		x(x), y(y) {}
 
-	Vec2 operator+(const Vec2& other) const {
+	template<typename T2>
+	Vec2 operator+(const Vec2<T2>& other) const {
 		return Vec2(x + other.x, y + other.y);
 	}
-	Vec2 operator-(const Vec2& other) const {
+
+	template<typename T2>
+	Vec2 operator-(const Vec2<T2>& other) const {
 		return Vec2(x - other.x, y - other.y);
 	}
-	bool operator==(const Vec2& other) const{
+
+	template<typename T2>
+	bool operator==(const Vec2<T2>& other) const{
 		return x == other.x && y == other.y;
 	}
-	bool operator!=(const Vec2& other) const {
+
+	template<typename T2>
+	bool operator!=(const Vec2<T2>& other) const {
 		return !operator==(other);
 	}
 
@@ -39,6 +46,15 @@ public:
 	template<typename NUM>
 	std::enable_if_t<std::is_arithmetic_v<NUM>, Vec2> operator/(const NUM& coefficient) const {
 		return Vec2(x / coefficient, y / coefficient);
+	}
+
+	template<typename T2>
+	operator Vec2<T2>() {
+		return Vec2<T2>(x, y);
+	}
+
+	float length() {
+		return std::sqrt(std::pow(x, 2) + std::pow(y, 2));
 	}
 };
 
@@ -74,18 +90,25 @@ public:
 	Vec3(const T& x, const T& y, const T& z) :
 		x(x), y(y), z(z) {}
 	
-	Vec3 operator+(const Vec3& other) const {
+	template<typename T2>
+	Vec3 operator+(const Vec3<T2>& other) const {
 		return Vec3(x + other.x, y + other.y, z + other.z);
 	}
-	Vec3 operator-(const Vec3& other) const {
+
+	template<typename T2>
+	Vec3 operator-(const Vec3<T2>& other) const {
 		return Vec3(x - other.x, y - other.y, z - other.z);
 	}
-	bool operator==(const Vec3& other) const{
+
+	template<typename T2>
+	bool operator==(const Vec3<T2>& other) const{
 		if (x == other.x && y == other.y && z == other.z)
 			return true;
 		return false;
 	}
-	bool operator!=(const Vec3& other) const {
+
+	template<typename T2>
+	bool operator!=(const Vec3<T2>& other) const {
 		return !operator==(other);
 	}
 
@@ -107,6 +130,15 @@ public:
 	template<typename NUM>
 	std::enable_if_t<std::is_arithmetic_v<NUM>, Vec3> operator-(const NUM& number) const {
 		return Vec3(x - number, y - number, z - number);
+	}
+
+	template<typename T2>
+	operator Vec3<T2>() {
+		return Vec3<T2>(x, y, z);
+	}
+
+	float length() {
+		return std::sqrt(std::pow(x, 2) + std::pow(y, 2) + std::pow(z, 2));
 	}
 };
 
@@ -153,18 +185,24 @@ public:
 	Vec4(const T& x, const T& y, const T& z, const T& w) :
 		x(x), y(y), z(z), w(w) {}
 
-	Vec4 operator+(const Vec4& other) const {
+	template<typename T2>
+	Vec4 operator+(const Vec4<T2>& other) const {
 		return Vec4(x + other.x, y + other.y, z + other.z, w + other.w);
 	}
-	Vec4 operator-(const Vec4& other) const {
+	template<typename T2>
+	Vec4 operator-(const Vec4<T2>& other) const {
 		return Vec4(x - other.x, y - other.y, z - other.z, w - other.w);
 	}
-	bool operator==(const Vec4& other) {
+
+	template<typename T2>
+	bool operator==(const Vec4<T2>& other) {
 		if (x == other.x && y == other.y && z == other.z && w == other.w)
 			return true;
 		return false;
 	}
-	bool operator!=(const Vec4& other) {
+
+	template<typename T2>
+	bool operator!=(const Vec4<T2>& other) {
 		return !operator==(other);
 	}
 
@@ -176,6 +214,15 @@ public:
 	template<typename NUM>
 	std::enable_if_t<std::is_arithmetic_v<NUM>, Vec4> operator/(const NUM& coefficient) const {
 		return Vec4(x / coefficient, y / coefficient, z / coefficient, w / coefficient);
+	}
+
+	template<typename T2>
+	operator Vec4<T2>() {
+		return Vec4<T2>(x, y, z, w);
+	}
+
+	float length() {
+		return std::sqrt(std::pow(x, 2) + std::pow(y, 2) + std::pow(z, 2) + std::pow(w, 2));
 	}
 };
 

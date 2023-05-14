@@ -8,6 +8,13 @@
 
 #include "Debuger.h"
 
+Image::Image(int width, int height, int channel) :
+	_width(width), _height(height), _channels(channel), new_width(width), new_height(height) 
+{
+	create_blank_image();
+}
+
+
 Image::Image(const std::string& file_path, int desired_channels, bool vertical_flip) :
 	_vertical_flip(vertical_flip)
 {
@@ -78,24 +85,24 @@ void Image::_clear_ram() {
 //}
 
 
-unsigned char* Image::get_image_data() {
+unsigned char* Image::get_image_data(){
 	return _image_data;
 }
-int Image::get_width() {
+int Image::get_width() const {
 	return _width;
 }
-int Image::get_height() {
+int Image::get_height() const {
 	return _height;
 }
-int Image::get_channels() {
+int Image::get_channels() const {
 	return _channels;
 }
 
-size_t Image::get_size() {
+size_t Image::get_size() const {
 	return _width * _height * _channels;
 }
 
-bool Image::get_vertical_flip() {
+bool Image::get_vertical_flip() const {
 	return _vertical_flip;
 }
 
@@ -133,6 +140,24 @@ vec3uc& _image_row::operator[](unsigned int index) {
 
 _image_row&& Image::operator[](unsigned int index) {
 	return _image_row(_image_data + index * _width * _channels, _width, _channels);
+}
+
+void Image::create_blank_image(){
+	_removed_pixels.clear();
+
+	if (_image_data != nullptr)
+		delete _image_data;
+	_image_data = new unsigned char[_width * _height * _channels];
+}
+void Image::create_blank_image(int width, int height, int channel){
+	_width = width;
+	_height = height;
+	_channels = channel;
+	new_width = width;
+	new_height = height;
+	_removed_pixels.clear();
+
+	create_blank_image();
 }
 
 void Image::update() {
