@@ -2,7 +2,7 @@
 
 #include "Graphs.h"
 #include "GraphSearch.h"
-
+#include "GraphSearchTemplated.h"
 
 // ImageGraph
 ImageGraph::ImageGraph(Image& image) :

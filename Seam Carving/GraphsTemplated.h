@@ -2,6 +2,7 @@
 
 #include "Graphs.h"
 #include "GraphSearch.h"
+#include "GraphSearchTemplated.h"
 
 //Graph
 template<typename T>

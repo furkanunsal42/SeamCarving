@@ -2,7 +2,7 @@
 #include "Graphs.h"
 #include "GraphsTemplated.h"
 
-std::vector<std::reference_wrapper<const _depth_first_search<vec2ui>::T>> _depth_first_search<vec2ui>::search(const Graph<T>& graph, const T& starting_point) {
+std::vector<std::reference_wrapper<const _depth_first_search<vec2ui>::T>> _depth_first_search<vec2ui>::search(const Graph<T>& graph, T starting_point) {
 	_marked.clear();
 	_marked.reserve(graph.vertex_size());
 
@@ -21,7 +21,7 @@ std::vector<std::reference_wrapper<const _depth_first_search<vec2ui>::T>> _depth
 			search.push_back((T&)object);
 		}
 
-		auto adjacencies = graph.get_adjacencies(object);
+		auto& adjacencies = graph.get_adjacencies(object);
 		for (const T& adjacent : adjacencies) {
 			if (!_marked[adjacent]) {
 				stack.push(adjacent);
@@ -34,7 +34,7 @@ std::vector<std::reference_wrapper<const _depth_first_search<vec2ui>::T>> _depth
 	return search;
 }
 
-std::vector<_depth_first_search<vec2ui>::T> _depth_first_search<vec2ui>::search(const ImageGraph& graph, const T& starting_point) {
+std::vector<_depth_first_search<vec2ui>::T> _depth_first_search<vec2ui>::search(const ImageGraph& graph, T starting_point) {
 	_marked.clear();
 	_marked.reserve(graph.vertex_size());
 
@@ -65,7 +65,7 @@ std::vector<_depth_first_search<vec2ui>::T> _depth_first_search<vec2ui>::search(
 	return search;
 }
 
-std::vector<std::reference_wrapper<const _breadth_first_search<vec2ui>::T>> _breadth_first_search<vec2ui>::search(const Graph<T>& graph, const T& starting_point) {
+std::vector<std::reference_wrapper<const _breadth_first_search<vec2ui>::T>> _breadth_first_search<vec2ui>::search(const Graph<T>& graph, T starting_point) {
 	_marked.clear();
 	_marked.reserve(graph.vertex_size());
 
@@ -82,7 +82,7 @@ std::vector<std::reference_wrapper<const _breadth_first_search<vec2ui>::T>> _bre
 		const T& object = stack.top();
 		stack.pop();
 
-		auto adjacencies = graph.get_adjacencies(object);
+		auto& adjacencies = graph.get_adjacencies(object);
 		for (const T& adjacent : adjacencies) {
 			if (!_marked[adjacent]) {
 				_marked[adjacent] = true;
@@ -97,7 +97,7 @@ std::vector<std::reference_wrapper<const _breadth_first_search<vec2ui>::T>> _bre
 	return search;
 }
 
-std::vector<_breadth_first_search<vec2ui>::T> _breadth_first_search<vec2ui>::search(const ImageGraph& graph, const _breadth_first_search<vec2ui>::T& starting_point) {
+std::vector<_breadth_first_search<vec2ui>::T> _breadth_first_search<vec2ui>::search(const ImageGraph& graph, T starting_point) {
 	_marked.clear();
 	_marked.reserve(graph.vertex_size());
 

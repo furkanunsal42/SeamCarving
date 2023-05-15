@@ -165,6 +165,7 @@
     <ClInclude Include="Dependencies\stb_image\stb_image_write.h" />
     <ClInclude Include="Graphs.h" />
     <ClInclude Include="GraphSearch.h" />
+    <ClInclude Include="GraphSearchTemplated.h" />
     <ClInclude Include="Image.h" />
   </ItemGroup>
   <ItemGroup>

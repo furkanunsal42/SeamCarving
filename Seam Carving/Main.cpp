@@ -5,6 +5,7 @@
 #include "Image.h"
 #include "Graphs.h"
 #include "GraphsTemplated.h"
+
 #include <unordered_map>
 
 Image kernel_filtering(Image& source, int kernel[3][3]) {
@@ -102,7 +103,7 @@ Image kernel_filtering(Image& source, int kernel[3][3]) {
 }/**/
 
 
-int main() {
+/*int main() {
 	Graph<int> graph;
 	graph.add_edge(0, 1);
 	graph.add_edge(0, 2);
@@ -122,6 +123,35 @@ int main() {
 	auto bps = graph.breadth_first_search(0);
 	for (auto object : bps)
 		std::cout << object << '\n';
+
+
+	std::cout << graph << '\n';
+
+
+
+	std::cin.get();
+}/**/
+
+int main() {
+	Graph<vec2ui> graph;
+	graph.add_edge(vec2ui(0, 0), vec2ui(10, 10));
+	graph.add_edge(vec2ui(0, 0), vec2ui(20, 20));
+	graph.add_edge(vec2ui(0, 0), vec2ui(50, 50));
+	graph.add_edge(vec2ui(0, 0), vec2ui(60, 60));
+
+	graph.add_edge(vec2ui(60, 60), vec2ui(40, 40));
+	graph.add_edge(vec2ui(40, 40), vec2ui(30, 30));
+	graph.add_edge(vec2ui(50, 50), vec2ui(30, 30));
+
+	std::cout << "depth first search: \n";
+	auto dps = graph.depth_first_search(vec2ui(0, 0));
+	for (auto object : dps)
+		std::cout << object.get() << '\n';
+
+	std::cout << "breadth first search: \n";
+	auto bps = graph.breadth_first_search(0);
+	for (auto object : bps)
+		std::cout << object.get() << '\n';
 
 
 	std::cout << graph << '\n';
