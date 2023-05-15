@@ -4,6 +4,7 @@
 #include "CortexMath.h"
 #include "Image.h"
 #include "Graphs.h"
+#include "GraphsTemplated.h"
 #include <unordered_map>
 
 Image kernel_filtering(Image& source, int kernel[3][3]) {
@@ -52,7 +53,7 @@ Image kernel_filtering(Image& source, int kernel[3][3]) {
 	}
 }/**/
 
-int main() {
+/*int main() {
 	Image image("GoldBlock.png", 3, false);
 	int kernel[3][3] =
 	{
@@ -61,6 +62,7 @@ int main() {
 		-1, -1, -1,
 	};
 	Image processed = kernel_filtering(image, kernel);
+	processed._vertical_flip = false;
 
 	ImageGraph graph(processed);
 	graph.set_adjacencies_function([](AdjacencyFunctionParameters) {
@@ -86,7 +88,7 @@ int main() {
 			return adjacencies;
 		});
 
-	auto dfs = graph.depth_first_search(vec2ui(0, -1));
+	auto dfs = graph.depth_first_search(vec2ui(0, 100));
 	int i = 0;
 	
 	for (auto& pixel : dfs)
@@ -99,7 +101,7 @@ int main() {
 	std::cin.get();
 }/**/
 
-/*
+
 int main() {
 	Graph<int> graph;
 	graph.add_edge(0, 1);
