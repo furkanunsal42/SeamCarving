@@ -70,6 +70,59 @@ private:
 };
 
 template<typename T>
+class _breadth_first_search {
+public:
+	std::vector<std::reference_wrapper<const T>> search(const Graph<T>& graph, const T& starting_point) {
+		_marked.clear();
+		_marked.reserve(graph.vertex_size());
+
+		std::vector<std::reference_wrapper<const T>> search;
+		search.reserve(graph.vertex_size());
+
+		std::stack<std::reference_wrapper<const T>> stack;
+		_marked[starting_point] = true;
+		search.push_back((T&)starting_point);
+		stack.push(starting_point);
+
+		while (!stack.empty()) {
+			const T& object = stack.top();
+			stack.pop();
+
+			auto& adjacencies = graph.get_adjacencies(object);
+			for (const T& adjacent : adjacencies) {
+				if (!_marked[adjacent]) {
+					_marked[adjacent] = true;
+					search.push_back((T&)adjacent);
+					stack.push(adjacent);
+				}
+			}
+		}
+
+		_marked.clear();
+
+		return search;
+	}
+
+private:
+	std::unordered_map<T, bool> _marked;
+
+};
+
+template<>
+class _breadth_first_search<vec2ui> {
+public:
+	typedef vec2ui T;
+
+	std::vector<std::reference_wrapper<const T>> search(const Graph<T>& graph, const T& starting_point);
+
+	std::vector<T> search(const ImageGraph& graph, const T& starting_point);
+
+private:
+	std::unordered_map<T, bool> _marked;
+};
+
+
+template<typename T>
 std::ostream& operator<<(std::ostream& stream, const Graph<T>& graph) {
 	for (auto iterator = graph.begin(); iterator != graph.end(); iterator++) {
 		stream << "key: " << iterator->first << "; ";
@@ -174,6 +227,12 @@ public:
 		return dfs.search(*this, starting_vertex);
 	}
 
+	std::vector<std::reference_wrapper<const T>> breadth_first_search(const T& starting_vertex) {
+		_breadth_first_search<T> bfs;
+		return bfs.search(*this, starting_vertex);
+	}
+
+
 	template<typename T2>
 	friend std::ostream& operator<<(std::ostream& os, const Graph<T2>& graph);
 
@@ -184,10 +243,11 @@ private:
 };
 
 // implicit interpretation of images as graphs
-class ImageGraph {
-	typedef vec2ui pixel_coord;
+#define AdjacencyFunctionParameters const ImageGraph& self, const ImageGraph::pixel_coord& target_pixel
 
+class ImageGraph {
 public:
+	typedef vec2ui pixel_coord;
 	ImageGraph(Image& image) :
 		image_reference(image) {}
 
@@ -220,6 +280,11 @@ public:
 	std::vector<vec2ui> depth_first_search(const vec2ui& starting_vertex) {
 		_depth_first_search<vec2ui> dfs;
 		return dfs.search(*this, starting_vertex);
+	}
+
+	std::vector<vec2ui> breadth_first_search(const vec2ui& starting_vertex) {
+		_breadth_first_search<vec2ui> bfs;
+		return bfs.search(*this, starting_vertex);
 	}
 
 	std::reference_wrapper<Image> image_reference;
@@ -293,6 +358,70 @@ std::vector<_depth_first_search<vec2ui>::T> _depth_first_search<vec2ui>::search(
 		auto adjacencies = graph.get_adjacencies(object);
 		for (const T& adjacent : adjacencies) {
 			if (!_marked[adjacent]) {
+				stack.push(adjacent);
+			}
+		}
+	}
+
+	_marked.clear();
+
+	return search;
+}
+
+std::vector<std::reference_wrapper<const _breadth_first_search<vec2ui>::T>> _breadth_first_search<vec2ui>::search(const Graph<T>& graph, const T& starting_point) {
+	_marked.clear();
+	_marked.reserve(graph.vertex_size());
+
+	std::vector<std::reference_wrapper<const T>> search;
+	search.reserve(graph.vertex_size());
+
+	std::stack<std::reference_wrapper<const T>> stack;
+	_marked[starting_point] = true;
+	search.push_back((T&)starting_point);
+	stack.push(starting_point);
+
+
+	while (!stack.empty()) {
+		const T& object = stack.top();
+		stack.pop();
+
+		auto adjacencies = graph.get_adjacencies(object);
+		for (const T& adjacent : adjacencies) {
+			if (!_marked[adjacent]) {
+				_marked[adjacent] = true;
+				search.push_back((T&)adjacent);
+				stack.push(adjacent);
+			}
+		}
+	}
+
+	_marked.clear();
+
+	return search;
+}
+
+std::vector<_breadth_first_search<vec2ui>::T> _breadth_first_search<vec2ui>::search(const ImageGraph& graph, const _breadth_first_search<vec2ui>::T& starting_point) {
+	_marked.clear();
+	_marked.reserve(graph.vertex_size());
+
+	std::vector<T> search;
+	search.reserve(graph.vertex_size());
+
+	std::stack<T> stack;
+	_marked[starting_point] = true;
+	search.push_back((T&)starting_point);
+	stack.push(starting_point);
+
+
+	while (!stack.empty()) {
+		const T& object = stack.top();
+		stack.pop();
+
+		auto adjacencies = graph.get_adjacencies(object);
+		for (const T& adjacent : adjacencies) {
+			if (!_marked[adjacent]) {
+				_marked[adjacent] = true;
+				search.push_back(adjacent);
 				stack.push(adjacent);
 			}
 		}
