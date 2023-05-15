@@ -29,15 +29,15 @@ Image kernel_filtering(Image& source, int kernel[3][3]) {
 
 	return new_image;
 }
-
 int main() {
 	Image image("small.png", 3);
 
 	ImageGraph graph(image);
-	auto adj = graph.depth_first_search<vec2ui>(vec2ui(0, 0));
+	auto adj = graph.depth_first_search(vec2ui(0, 0));
 	int i = 0;
 	for (auto object : adj)
 		std::cout << i++ << " " << object << '\n';
+	std::cout << adj.size() << std::endl;
 
 	std::cin.get();
 }

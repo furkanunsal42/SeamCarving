@@ -9,6 +9,7 @@
 #include <functional>
 #include "Image.h"
 #include "CortexMath.h"
+#include <stack>
 
 template<typename T>
 class Graph;
@@ -18,12 +19,32 @@ class ImageGraph;
 template<typename T>
 class _depth_first_search {
 public:
-	static std::vector<std::reference_wrapper<const T>> search(const Graph<T>& graph, const T& starting_point) {
+	std::vector<std::reference_wrapper<const T>> search(const Graph<T>& graph, const T& starting_point) {
 		_marked.clear();
 		_marked.reserve(graph.vertex_size());
 
 		std::vector<std::reference_wrapper<const T>> search;
-		_internal_search_recursive(graph, starting_point, &search);
+		search.reserve(graph.vertex_size());
+
+		std::stack<std::reference_wrapper<const T>> stack;
+		stack.push(starting_point);
+
+		while (!stack.empty()) {
+			const T& object = stack.top();
+			stack.pop();
+
+			if (!_marked[object]) {
+				_marked[object] = true;
+				search.push_back((T&)object);
+			}
+
+			auto& adjacencies = graph.get_adjacencies(object);
+			for (const T& adjacent : adjacencies) {
+				if (!_marked[adjacent]) {
+					stack.push(adjacent);
+				}
+			}
+		}
 
 		_marked.clear();
 
@@ -31,18 +52,7 @@ public:
 	}
 
 private:
-	static std::unordered_map<T, bool> _marked;
-	static void _internal_search_recursive(const Graph<T>& graph, const T& starting_point, std::vector<std::reference_wrapper<const T>>* search_result) {
-
-		_marked[starting_point] = true;
-		search_result->push_back(std::reference_wrapper<const T>(starting_point));
-		auto& adjacencies = graph.get_adjacencies(starting_point);
-		for (const T& adjacent : adjacencies) {
-			if (!_marked[adjacent])
-				_internal_search_recursive(graph, adjacent, search_result);
-		}
-
-	}
+	std::unordered_map<T, bool> _marked;
 
 };
 
@@ -51,44 +61,13 @@ class _depth_first_search<vec2ui> {
 public:
 	typedef vec2ui T;
 
-	template<typename T2>
-	static std::enable_if_t<std::is_same<T2, T>::value, std::vector<std::reference_wrapper<const T>>> search(const Graph<T2>& graph, const T& starting_point) {
-		_marked.clear();
-		_marked.reserve(graph.vertex_size());
+	std::vector<std::reference_wrapper<const T>> search(const Graph<T>& graph, const T& starting_point);
 
-		std::vector<std::reference_wrapper<const T>> search;
-		_internal_search_recursive(graph, starting_point, &search);
-
-		_marked.clear();
-
-		return search;
-	}
-
-	static std::vector<T> search(const ImageGraph& graph, const T& starting_point);
+	std::vector<T> search(const ImageGraph& graph, const T& starting_point);
 
 private:
-	static std::unordered_map<T, bool> _marked;
-
-	template<typename T2>
-	static std::enable_if_t<std::is_same<T2, T>::value, void> _internal_search_recursive(const Graph<T2>& graph, const T& starting_point, std::vector<std::reference_wrapper<const T>>* search_result) {
-
-		_marked[starting_point] = true;
-		search_result->push_back(std::reference_wrapper<const T>(starting_point));
-		auto& adjacencies = graph.get_adjacencies(starting_point);
-		for (const T& adjacent : adjacencies) {
-			if (!_marked[adjacent])
-				_internal_search_recursive(graph, adjacent, search_result);
-		}
-
-	}
-
-	static void _internal_search_recursive(const ImageGraph& graph, const T& starting_point, std::vector<T>* search_result);
+	std::unordered_map<T, bool> _marked;
 };
-
-template<typename T>
-std::unordered_map<T, bool> _depth_first_search<T>::_marked;
-
-std::unordered_map<vec2ui, bool> _depth_first_search<vec2ui>::_marked;
 
 template<typename T>
 std::ostream& operator<<(std::ostream& stream, const Graph<T>& graph) {
@@ -191,7 +170,8 @@ public:
 	}
 
 	std::vector<std::reference_wrapper<const T>> depth_first_search(const T& starting_vertex) {
-		return _depth_first_search<T>::search(*this, starting_vertex);
+		_depth_first_search<T> dfs;
+		return dfs.search(*this, starting_vertex);
 	}
 
 	template<typename T2>
@@ -233,13 +213,13 @@ public:
 		return edge_size;
 	}
 
-	void set_adjacencies_function(std::function < std::forward_list<pixel_coord>(const ImageGraph&, const pixel_coord&) > new_function) {
+	void set_adjacencies_function(std::function<std::forward_list<pixel_coord>(const ImageGraph&, const pixel_coord&) > new_function) {
 		_adjacencies_function = new_function;
 	}
 
-	template<typename T2>
-	std::enable_if_t<std::is_same<T2, vec2ui>::value, std::vector<vec2ui>> depth_first_search(const vec2ui& starting_vertex) {
-		return _depth_first_search<vec2ui>::search(*this, starting_vertex);
+	std::vector<vec2ui> depth_first_search(const vec2ui& starting_vertex) {
+		_depth_first_search<vec2ui> dfs;
+		return dfs.search(*this, starting_vertex);
 	}
 
 	std::reference_wrapper<Image> image_reference;
@@ -259,16 +239,36 @@ private:
 	};
 };
 
-void _depth_first_search<vec2ui>::_internal_search_recursive(const ImageGraph& graph, const T& starting_point, std::vector<T>* search_result) {
+std::vector<std::reference_wrapper<const _depth_first_search<vec2ui>::T>> _depth_first_search<vec2ui>::search(const Graph<T>& graph, const T& starting_point) {
+	_marked.clear();
+	_marked.reserve(graph.vertex_size());
 
-	_marked[starting_point] = true;
-	search_result->push_back(starting_point);
-	auto adjacencies = graph.get_adjacencies(starting_point);
-	for (auto& adjacent : adjacencies) {
-		if (!_marked[adjacent])
-			_internal_search_recursive(graph, adjacent, search_result);
+	std::vector<std::reference_wrapper<const T>> search;
+	search.reserve(graph.vertex_size());
+
+	std::stack<std::reference_wrapper<const T>> stack;
+	stack.push(starting_point);
+
+	while (!stack.empty()) {
+		const T& object = stack.top();
+		stack.pop();
+
+		if (!_marked[object]) {
+			_marked[object] = true;
+			search.push_back((T&)object);
+		}
+
+		auto adjacencies = graph.get_adjacencies(object);
+		for (const T& adjacent : adjacencies) {
+			if (!_marked[adjacent]) {
+				stack.push(adjacent);
+			}
+		}
 	}
 
+	_marked.clear();
+
+	return search;
 }
 
 std::vector<_depth_first_search<vec2ui>::T> _depth_first_search<vec2ui>::search(const ImageGraph& graph, const T& starting_point) {
@@ -276,7 +276,27 @@ std::vector<_depth_first_search<vec2ui>::T> _depth_first_search<vec2ui>::search(
 	_marked.reserve(graph.vertex_size());
 
 	std::vector<T> search;
-	_internal_search_recursive(graph, starting_point, &search);
+	search.reserve(graph.vertex_size());
+
+	std::stack<T> stack;
+	stack.push(starting_point);
+
+	while (!stack.empty()) {
+		const T& object = stack.top();
+		stack.pop();
+
+		if (!_marked[object]) {
+			_marked[object] = true;
+			search.push_back(object);
+		}
+
+		auto adjacencies = graph.get_adjacencies(object);
+		for (const T& adjacent : adjacencies) {
+			if (!_marked[adjacent]) {
+				stack.push(adjacent);
+			}
+		}
+	}
 
 	_marked.clear();
 
