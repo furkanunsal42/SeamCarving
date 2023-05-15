@@ -1,4 +1,4 @@
-#include "GL/glew.h"
+﻿#include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
 #include "CortexMath.h"
@@ -31,18 +31,40 @@ Image kernel_filtering(Image& source, int kernel[3][3]) {
 }
 
 int main() {
-	Graph<int> graph;
-	graph.add_edge(3, 4);
-	graph.add_vertex(2);
-	graph.add_edge(4, 2);
-	graph.add_vertex(2);
+	Image image("small.png", 3);
 
-
-	std::cout << graph << '\n';
+	ImageGraph graph(image);
+	auto adj = graph.depth_first_search<vec2ui>(vec2ui(0, 0));
+	int i = 0;
+	for (auto object : adj)
+		std::cout << i++ << " " << object << '\n';
 
 	std::cin.get();
-
 }
+
+/*
+int main() {
+	Graph<int> graph;
+	graph.add_edge(0, 1);
+	graph.add_edge(0, 2);
+	graph.add_edge(0, 5);
+	graph.add_edge(0, 6);
+
+	graph.add_edge(6, 4);
+	graph.add_edge(4, 3);
+	graph.add_edge(5, 3);
+
+	auto dps = graph.depth_first_search(0);
+	for (auto object : dps)
+		std::cout << object << '\n';
+	
+	std::cout << graph << '\n';
+
+
+
+	std::cin.get();
+}
+*/
 
 /*
 int main() {
