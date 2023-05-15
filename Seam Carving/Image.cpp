@@ -135,10 +135,12 @@ _image_row::_image_row(unsigned char* data, int width, int channel) :
 	_row_data(data), _width(width), _channel(channel) {}
 
 vec3uc& _image_row::operator[](unsigned int index) {
+	index = std::min(std::max((int)index, 0), _width - 1);
 	return *(vec3uc*)(_row_data + index * _channel);
 }
 
 _image_row&& Image::operator[](unsigned int index) {
+	index = std::min(std::max((int)index, 0), _height - 1);
 	return _image_row(_image_data + index * _width * _channels, _width, _channels);
 }
 

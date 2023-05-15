@@ -7,9 +7,10 @@
 #include <codecvt>
 #include <type_traits>
 #include <functional>
+#include <stack>
+
 #include "Image.h"
 #include "CortexMath.h"
-#include <stack>
 
 template<typename T>
 class Graph;
@@ -294,10 +295,10 @@ private:
 		for (int y = -1; y <= 1; y++)
 			for (int x = -1; x <= 1; x++)
 				if (y != 0 || x != 0) {
-					adjacencies.push_front(pixel_coord(
+					adjacencies.emplace_front(
 						std::min(std::max((int)target_pixel.x + x, 0), self.image_reference.get().get_width() - 1),
 						std::min(std::max((int)target_pixel.y + y, 0), self.image_reference.get().get_height() - 1)
-					));
+					);
 				}
 
 		return adjacencies;
@@ -364,7 +365,6 @@ std::vector<_depth_first_search<vec2ui>::T> _depth_first_search<vec2ui>::search(
 	}
 
 	_marked.clear();
-
 	return search;
 }
 
