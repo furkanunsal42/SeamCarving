@@ -12,20 +12,20 @@
 #include "Image.h"
 #include "CortexMath.h"
 
-template<typename T>
+template<typename T, typename cost_type>
 class Graph {
 public:
 	Graph(size_t vertex_amount = 0);
 
-	void add_edge(T vertex1, T vertex2);
-	void add_edge(const std::pair<T, T>& verticies);
-	void add_edge(const std::vector<const std::pair<T, T>>& verticies);
-	void add_edge(const std::forward_list<const std::pair<T, T>> verticies);
+	void add_edge(T vertex1, T vertex2, cost_type cost);
+	void add_edge(const std::pair<std::pair<T, T>, cost_type>& verticies);
+	void add_edge(const std::vector<const std::pair<std::pair<T, T>, cost_type>>& verticies);
+	void add_edge(const std::forward_list<const std::pair<std::pair<T, T>, cost_type>> verticies);
 	
-	void add_undirected_edge(T vertex1, T vertex2);
-	void add_undirected_edge(const std::pair<T, T>& verticies);
-	void add_undirected_edge(const std::vector<const std::pair<T, T>>& verticies);
-	void add_undirected_edge(const std::forward_list<const std::pair<T, T>> verticies);
+	void add_undirected_edge(T vertex1, T vertex2, cost_type cost);
+	void add_undirected_edge(const std::pair<std::pair<T, T>, cost_type>& verticies);
+	void add_undirected_edge(const std::vector<const std::pair<std::pair<T, T>, cost_type>>& verticies);
+	void add_undirected_edge(const std::forward_list<const std::pair<std::pair<T, T>, cost_type>> verticies);
 	
 	void add_vertex(T vertex) ;
 	void add_vertex(const std::vector<T>& verticies);
@@ -34,8 +34,8 @@ public:
 	auto begin() const;
 	auto end() const;
 	
-	const std::forward_list<T>& get_adjacencies(const T& vertex) const;
-	const std::forward_list<T>& operator[](const T& vertex) const;
+	const std::forward_list<std::pair<T, cost_type>>& get_adjacencies(const T& vertex) const;
+	const std::forward_list<std::pair<T, cost_type>>& operator[](const T& vertex) const;
 	
 	size_t vertex_size() const;
 	size_t edge_size() const;
@@ -55,7 +55,7 @@ public:
 
 private:
 
- 	std::unordered_map<T, std::forward_list<T>> edges;
+ 	std::unordered_map<T, std::forward_list<std::pair<T, cost_type>>> edges;
 
 };
 

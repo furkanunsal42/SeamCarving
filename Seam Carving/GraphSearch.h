@@ -12,7 +12,7 @@
 #include "Image.h"
 #include "CortexMath.h"
 
-template<typename T>
+template<typename T, typename cost_type = int>
 class Graph;
 class ImageGraph;
 
