@@ -39,9 +39,16 @@ public:
 	
 	size_t vertex_size() const;
 	size_t edge_size() const;
+
+	enum Order {
+		PRE_ORDER = 0,
+		POST_ORDER = 1,
+		REVERSE_PRE_ORDER = 2,
+		REVERSE_POST_ORDER = 3,
+	};
 	
-	std::vector<std::reference_wrapper<const T>> depth_first_search(const T& starting_vertex);
-	std::vector<std::reference_wrapper<const T>> breadth_first_search(const T& starting_vertex);
+	std::vector<std::reference_wrapper<const T>> depth_first_search(const T& starting_vertex, Order Order = PRE_ORDER);
+	std::vector<std::reference_wrapper<const T>> breadth_first_search(const T& starting_vertex, Order Order = PRE_ORDER);
 
 	template<typename T2>
 	friend std::ostream& operator<<(std::ostream& os, const Graph<T2>& graph);

@@ -144,7 +144,7 @@ int main() {
 	graph.add_edge(vec2ui(50, 50), vec2ui(30, 30));
 
 	std::cout << "depth first search: \n";
-	auto dps = graph.depth_first_search(vec2ui(0, 0));
+	auto dps = graph.depth_first_search(vec2ui(0, 0), Graph<vec2ui>::POST_ORDER);
 	for (auto object : dps)
 		std::cout << object.get() << '\n';
 

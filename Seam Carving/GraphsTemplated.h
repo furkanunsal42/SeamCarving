@@ -109,13 +109,13 @@ size_t Graph<T>::edge_size() const {
 }
 
 template<typename T>
-std::vector<std::reference_wrapper<const T>> Graph<T>::depth_first_search(const T& starting_vertex) {
+std::vector<std::reference_wrapper<const T>> Graph<T>::depth_first_search(const T& starting_vertex, Order order) {
 	_depth_first_search<T> dfs;
-	return dfs.search(*this, starting_vertex);
+	return dfs.search(*this, starting_vertex, _depth_first_search<T>::Order(+order));
 }
 
 template<typename T>
-std::vector<std::reference_wrapper<const T>> Graph<T>::breadth_first_search(const T& starting_vertex) {
+std::vector<std::reference_wrapper<const T>> Graph<T>::breadth_first_search(const T& starting_vertex, Order order) {
 	_breadth_first_search<T> bfs;
 	return bfs.search(*this, starting_vertex);
 }
